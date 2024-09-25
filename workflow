@@ -16,12 +16,18 @@ jobs:
         mkdir -p ~/.m2
         echo "$MAVEN_SETTINGS" > ~/.m2/settings.xml
       env:
-        MAVEN_SETTINGS: ${{ secrets.MAVEN_SETTINGS }}  # Store the settings.xml content in a GitHub secret
+        MAVEN_SETTINGS: |
+          <settings>
+            <mirrors>
+              <mirror>
+                <id>nexus-public</id>
+                <mirrorOf>*</mirrorOf>
+                <url>https://dev.ocseops.com/nexus/content/groups/public</url>
+              </mirror>
+            </mirrors>
+          </settings>
 
     - name: Build with Maven
       run: mvn clean compile package
-      env:
-        REPO_USERNAME: ${{ secrets.REPO_USERNAME }}  # GitHub secret for repository username
-        REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}  # GitHub secret for repository password
 
 
